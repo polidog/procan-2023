@@ -1,0 +1,38 @@
+version: 1
+rules:
+  - expected: php
+    spece: 
+      - from: php
+        to: php
+      - from: php
+        to: php
+  - expected: Laravel
+    spece:
+      - from: laravel
+        to: Laravel
+  - expected: Symfony
+    spece:
+      - from: symfony
+        to: Symfony
+  - expected: parcent
+    spece:
+      - from: ％
+        to: "%"
+  - expected: Web
+    spece:
+      - from: web
+        to: Web
+      - from: WEB
+        to: Web
+  - expected: コケる
+    spece:
+      - from: コケる
+        to: 失敗する
+  - expected: GitHub
+    spece:
+      - from: github
+        to: GitHub
+  - expected: Windows
+    spece:
+      - from: windows
+        to: Windows
