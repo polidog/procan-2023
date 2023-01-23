@@ -6,10 +6,7 @@
 
 # 今回使う商品検索のWeb APIについて
 
-実際に商品検索するのにあたって楽天の商品検索APIを利用します。  
-https://webservice.rakuten.co.jp/documentation/ichiba-item-search
-
-(※ただし、色々問題があったので今回は実験用ということで楽天APIをproxyしたものを用意しています)
+今回は私の方でAPIを用意しました。
 
 まずは、商品のキーワードを入力したら、そのキーワードに関連する商品情報が取得するコードを書いてみましょう。  
 publicディレクトリの中に `api1.php` というファイルを作りましょう。  
@@ -106,11 +103,10 @@ $json = json_decode($content, true);
 
 phpでは `https://localhost?search=xxxxx` という形で渡せば `$_GET` という変数で受け取ることができます。  
 この変数はスーパーグローバル変数というものでURLのパラメータ(クエリ)の値を変数として受け取ることができます。
-一般的によく使われている方法でGoogle検索でも使われています。
 
 https://www.google.com/search?q=%E9%9D%99%E5%B2%A1 といった `q=xxxx` というクエリを渡しています。  
 
-今回は `search=xxxxxxxxxx` というクエリを受け取って検索ワードとして設定できるようにしましょう。
+今回は `search=xxxxxxxxxx` というURLパラメータ(クエリ)を受け取って検索ワードとして設定できるようにしましょう。
 
 ```php
 // 検索したい商品名
