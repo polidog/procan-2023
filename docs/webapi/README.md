@@ -6,11 +6,12 @@
 
 # 今回使う商品検索のWeb APIについて
 
-今回は私の方でAPIを用意しました。
+実際に商品検索するのにあたって楽天の商品検索APIを利用します。  
+https://webservice.rakuten.co.jp/documentation/ichiba-item-search
 
 まずは、商品のキーワードを入力したら、そのキーワードに関連する商品情報が取得するコードを書いてみましょう。  
 publicディレクトリの中に `api1.php` というファイルを作りましょう。  
-作り終わったら、以下のコードを書いてください。  
+作り終わったら、以下のコードを書いてください。    　
 
 ```php
 <?php
@@ -18,12 +19,12 @@ publicディレクトリの中に `api1.php` というファイルを作りま�
 // public/api1.php
 
 const APP_ID = 'xxxxxx'; // Application ID
-const BASE_API_URL = 'https://asia-northeast1-shizuoka-procan-2023-proxy.cloudfunctions.net/api/proxy?applicationId=%s&keyword=%s'; // APIのURL
+const BASE_API_URL = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?applicationId=%s&keyword=%s&formatVersion=2'; // APIのURL
 
 // 検索したい商品名
 $keyword = 'ソファ';
 
-// 検索するURLを生成する
+// 検索するURLを生成する https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?applicationId=xxxxxx&keyword=ソファ&formatVersion=2
 $url = sprintf(BASE_API_URL, APP_ID, $keyword);
 
 // APIからデータを取得する
@@ -54,12 +55,12 @@ publicディレクトリの中に `api2.php` というファイルを作りま�
 // public/api2.php
 
 const APP_ID = 'xxxxxxx'; // Application ID
-const BASE_API_URL = 'https://asia-northeast1-shizuoka-procan-2023-proxy.cloudfunctions.net/api/proxy?applicationId=%s&keyword=%s'; // APIのURL
+const BASE_API_URL = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?applicationId=%s&keyword=%s&formatVersion=2'; // APIのURL
 
 // 検索したい商品名
 $keyword = 'ソファ';
 
-// 検索するURLを生成する https://asia-northeast1-shizuoka-procan-2023-proxy.cloudfunctions.net/api/proxy?applicationId=xxxxxx&keyword=ソファ&formatVersion=2
+// 検索するURLを生成する https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?applicationId=xxxxxx&keyword=ソファ&formatVersion=2
 $url = sprintf(BASE_API_URL, APP_ID, $keyword);
 
 // APIからデータを取得する

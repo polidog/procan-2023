@@ -11,9 +11,8 @@
 
 ```php
 <?php
-
 const APP_ID = 'xxxx'; // Application ID
-const BASE_API_URL = 'https://asia-northeast1-shizuoka-procan-2023-proxy.cloudfunctions.net/api/proxy?applicationId=%s&keyword=%s'; // APIのURL
+const BASE_API_URL = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?applicationId=%s&keyword=%s&formatVersion=2'; // APIのURL
 
 // 検索したい商品名
 $search = $_GET['search'] ?? null;
@@ -114,6 +113,7 @@ $items = match($search) {
 
 
 ```php
+
 <?php
 
 /**
