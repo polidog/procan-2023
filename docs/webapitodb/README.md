@@ -23,7 +23,11 @@ $fnApiSearch = static function ($apiSearchWord): array {
     $url = sprintf(BASE_API_URL, APP_ID, $apiSearchWord);
 
     // APIからデータを取得する
-    $content = file_get_contents($url);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $content = curl_exec($ch);
+    curl_close($ch);
 
     // JSON形式のデータを連想配列に変換する
     $json = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
