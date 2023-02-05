@@ -183,7 +183,7 @@ if (false === $hasItem($pdo, $itemCode)) {
     $item = $findItem($pdo, $itemCode);
 
     // 商品が登録されていなければ、商品を登録する
-    $register($pdo, $itemCode, $itemName);
+    $register($pdo, $item['itemCode'], $item['itemName'], $item['image']);
 }
 
 header('Location: search.php?search=' . $search);
