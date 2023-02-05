@@ -82,7 +82,7 @@ $items = match($search) {
         </td>
         <td>
           <a href="<?php echo $item['itemUrl']; ?>" class="btn btn-dark btn-sm" target="_blank">商品情報へ</a>
-          <a href="<?php echo sprintf('/register.php?itemCode=%s&itemName=%s&search=%s', $item['itemCode'], $item['itemName'], $search); ?>" class="btn btn-primary btn-sm">欲しい物リストへ登録</a>
+          <a href="<?php echo sprintf('/register.php?itemCode=%s&search=%s', $item['itemCode'], $search); ?>" class="btn btn-primary btn-sm">欲しい物リストへ登録</a>
         </td>
       </tr>
     <?php endforeach; ?>
@@ -115,6 +115,8 @@ $items = match($search) {
 ```php
 
 <?php
+const APP_ID = 'xxxx'; // Application ID
+const BASE_API_URL = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?applicationId=%s&itemCode=%s&formatVersion=2'; // APIのURL
 
 /**
  * 商品が登録されているか判定する関数
@@ -132,17 +134,38 @@ $hasItem = static function(PDO $pdo, string $itemCode): bool {
 /**
  * 商品を登録するための関数
  */
-$register = static function(PDO $pdo, string $itemCode, string $name): void {
-    $stmt = $pdo->prepare("INSERT INTO items (item_code, name, created_at, updated_at) VALUES (:itemCode, :name, now(), now())");
+$register = static function(PDO $pdo, string $itemCode, string $name, string $image): void {
+    $stmt = $pdo->prepare("INSERT INTO items (item_code, name, image, created_at, updated_at) VALUES (:itemCode, :name, :image, now(), now())");
     $stmt->bindValue(':itemCode', $itemCode);
     $stmt->bindValue(':name', $name);
+    $stmt->bindValue(':image', $image);
     $stmt->execute();
 };
 
+/**
+ * 商品をAPIから取得
+ */
+$findItem = static function (PDO $pdo , string $itemCode): array{
+    $url = sprintf(BASE_API_URL, APP_ID, $itemCode);
 
+    // APIからデータを取得する
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $content = curl_exec($ch);
+    curl_close($ch);
+
+    $json = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+    $item = array_pop($json['Items']);
+
+    return [
+        'itemCode' => $item['itemCode'],
+        'itemName' => $item['itemName'],
+        'image' => $item['mediumImageUrls'][0],
+    ];
+};
 
 $itemCode = $_GET['itemCode'] ?? null;
-$itemName = $_GET['itemName'] ?? null;
 
 if (null === $itemCode) {
     // itemCodeが指定されてないためsearch.phpにリダイレクト
@@ -156,6 +179,9 @@ $search = $_GET['search'] ?? null;
 $pdo = new PDO('mysql:host=db;port=3306;dbname=wishlist', 'shizuoka', 'fujiyama'); // データベースへの接続
 
 if (false === $hasItem($pdo, $itemCode)) {
+    // 商品コードを元に商品情報を取得する
+    $item = $findItem($pdo, $itemCode);
+
     // 商品が登録されていなければ、商品を登録する
     $register($pdo, $itemCode, $itemName);
 }
